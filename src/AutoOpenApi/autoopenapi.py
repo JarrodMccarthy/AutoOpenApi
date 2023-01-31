@@ -22,7 +22,7 @@ class TypeClass(ABC):
         super().__init__()
     
     def _primitive_types(self, var: Any) -> bool:
-        if (type(var) == str) or (type(var) == int) or (type(var) == float):
+        if (type(var) == str) or (type(var) == int) or (type(var) == float) or (type(var) == bool):
             return True
         else:
             return False
