@@ -22,13 +22,15 @@ class TypeClass(ABC):
         super().__init__()
     
     def _primitive_types(self, var: Any) -> bool:
-        if (type(var) == str) or (type(var) == int) or (type(var) == float) or (type(var) == bool):
+        if (type(var) == str) or (type(var) == int) or (type(var) == float) or (type(var) == bool) or (var is None):
             return True
         else:
             return False
     
     def _map_types(self, key: Any) -> str:
         if type(key) == str:
+            return "string"
+        elif key is None:
             return "string"
         elif type(key) == int:
             return "integer"
@@ -235,6 +237,8 @@ class Schema(TypeClass, ConverterRequirements):
                 return_dict["items"][str(key)] = self.get_object_schema(value)
             elif type(value) == list:
                 return_dict["items"][str(key)] = self.get_array_schema(value)
+            elif type(value) is None:
+                return_dict["properties"][str(key)] = self.get_primitive_schema("None")
             else:
                 raise Exception(f"Error: Could not get schema for type {type(value)}")
         return return_dict
@@ -251,6 +255,8 @@ class Schema(TypeClass, ConverterRequirements):
                 return_dict["properties"][str(key)] = self.get_object_schema(value)
             elif type(value) == list:
                 return_dict["properties"][str(key)] = self.get_array_schema(value)
+            elif type(value) is None:
+                return_dict["properties"][str(key)] = self.get_primitive_schema("None")
             else:
                 raise Exception(f"Error: Could not get schema for type {type(value)}")
         return return_dict
@@ -517,53 +523,53 @@ class ToDoc:
         self.set_current_yaml()
         return 
 
-# if __name__ =="__main__":
+if __name__ =="__main__":
     
 
-#     E1 = Endpoint(endpoint_name="/v1/poc/aurora/schema")
-#     M1 = Method(verb="POST")
-#     M2 = Method(verb="GET")
+    E1 = Endpoint(endpoint_name="/v1/poc/aurora/schema")
+    M1 = Method(verb="POST")
+    M2 = Method(verb="GET")
     
 
-#     schema_name = E1.name + M1.verb
+    schema_name = E1.name + M1.verb
 
-#     p1_1 = Parameter(name="queryparam1", IN="query", desc="query parameter 1", required=True, parameter_value="string_param_value")
-#     #print(p1_1.to_open_api_3())
-#     p1_2 = Parameter(name="queryparam2", IN="query", desc="query parameter 2", required=True, parameter_value=2)
-#     #print(p1_2.to_open_api_3())    
-#     p1_3 = Parameter(name="pathparam1", IN="path", desc="query parameter 2", required=True, parameter_value=3.0)
-#     #print(p1_3.to_open_api_3())  
-#     r1_1 = Response(code=200, desc="Successful Response", schema_name=schema_name)
-#     #print(r1_1.to_open_api_3())
+    p1_1 = Parameter(name="queryparam1", IN="query", desc="query parameter 1", required=True, parameter_value="string_param_value")
+    #print(p1_1.to_open_api_3())
+    p1_2 = Parameter(name="queryparam2", IN="query", desc="query parameter 2", required=True, parameter_value=2)
+    #print(p1_2.to_open_api_3())    
+    p1_3 = Parameter(name="pathparam1", IN="path", desc="query parameter 2", required=True, parameter_value=3.0)
+    #print(p1_3.to_open_api_3())  
+    r1_1 = Response(code=200, desc="Successful Response", schema_name=schema_name)
+    #print(r1_1.to_open_api_3())
 
-#     r1_2 = Response(code=400, desc="Bad Request", schema_name="ApiResponse")
-#     #print(r1_2.to_open_api_3())
-#     M1.set_parameters(parameters=[p1_1, p1_2])
-#     M1.set_responses(responses=[r1_1])
+    r1_2 = Response(code=400, desc="Bad Request", schema_name="ApiResponse")
+    #print(r1_2.to_open_api_3())
+    M1.set_parameters(parameters=[p1_1, p1_2])
+    M1.set_responses(responses=[r1_1])
 
-#     M2.set_responses(responses=[r1_1, r1_2]) # no params on this
-#     #print(M1.to_open_api_3())
-#     E1.set_methods(methods=[M1])
+    M2.set_responses(responses=[r1_1, r1_2]) # no params on this
+    #print(M1.to_open_api_3())
+    E1.set_methods(methods=[M1])
 
-#     mixed_object_body = {
-#         "item1": "value1",
-#         "item2": 2,
-#         "item3": 3.0,
-#         "item4": ["a", "list", "string", "things"]
-#     }
-#     print('\n')
-#     S1 = Schema(response=r1_1, example=mixed_object_body)
-    
-#     C1 = Component()
-#     C1.set_schemas([S1])
+    mixed_object_body = {
+        "item1": "value1",
+        "item2": 2,
+        "item3": 3.0,
+        "item4": None
+    }
+    print('\n')
+    S1 = Schema(response=r1_1, example=mixed_object_body)
+    S1.to_open_api_3()
+    C1 = Component()
+    C1.set_schemas([S1])
 
 
 
-#     OADB = OpenApiDocBuilder(file_location=None)
-#     current_yaml = OADB.read_current_file()
-#     current_yaml["paths"] = E1.to_open_api_3()
-#     current_yaml.update(C1.to_open_api_3())
-#     OADB.write_to_file(current_yaml)
+    # OADB = OpenApiDocBuilder(file_location=None)
+    # current_yaml = OADB.read_current_file()
+    # current_yaml["paths"] = E1.to_open_api_3()
+    # current_yaml.update(C1.to_open_api_3())
+    # OADB.write_to_file(current_yaml)
 
     
     
