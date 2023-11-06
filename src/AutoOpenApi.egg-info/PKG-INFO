@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: AutoOpenApi
-Version: 0.0.2
+Version: 1.0.0
 Summary: An attempt to go from test definition to openapi3 spec
 Home-page: https://github.com/JarrodMccarthy/AutoOpenApi
 Author: Jarrod McCarthy
@@ -15,5 +15,19 @@ License-File: LICENSE
 
 # AutoOpenApi
 
+make change
+
+Update version in setup.cfg
+
+
+# WINDOWS
 py -m build : build command
+
+py -m twine upload --repository pypi dist/*
+
+# UBUNTU
+
+python3 -m build
+
+python3 -m twine upload --repository pypi dist/*
 
