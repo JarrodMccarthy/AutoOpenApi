@@ -1,0 +1,73 @@
+openapi: 3.0.0
+servers:
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/JARRODMCCARTHY12_1/test/1.0.0
+info:
+  version: 1.0.0
+  title: home-iot-api
+  description: The API for the EatBacon IOT project
+paths:
+  /root/endpoint/{pparam}:
+    get:
+      parameters:
+      - name: pparam
+        in: path
+        description: path parameter 0
+        required: true
+        schema:
+          type: string
+          example: pparma_value
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rootendpointpparamget'
+  /root/endpoint/complicated:
+    get:
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rootendpointcomplicatedget'
+components:
+  schemas:
+    rootendpointpparamget:
+      type: string
+      example: Some response
+    rootendpointcomplicatedget:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Jarrod
+        age:
+          type: integer
+          example: 31
+          format: int32
+        details:
+          type: object
+          properties:
+            more:
+              type: string
+              example: stuff
+            key:
+              type: integer
+              example: 3
+              format: int32
+        more_details:
+          type: array
+          items:
+            object:
+              type: object
+              properties:
+                arraykey:
+                  type: integer
+                  example: 1
+                  format: int32
+                another:
+                  type: string
+                  example: string

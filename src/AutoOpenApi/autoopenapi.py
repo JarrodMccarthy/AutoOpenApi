@@ -1,6 +1,6 @@
 import os
 import oyaml as yaml
-from typing import Any, List, Union
+from typing import Any, List, Union, Optional
 from abc import ABC, abstractclassmethod
 import json
 
@@ -113,7 +113,9 @@ class Response(ConverterRequirements):
 
     def set_schema_name(self, schema_name):
         schema_name = schema_name.replace('/', '')
-        self.schema_name = schema_name.upper()
+        schema_name = schema_name.replace('{', '')
+        schema_name = schema_name.replace('}', '')
+        self.schema_name = schema_name.lower()
         self.schema = {"$ref": f"#/components/schemas/{self.schema_name}"}
         return self.schema
 
@@ -396,9 +398,14 @@ class OpenApiDocBuilder:
                 current_yaml['paths'][k] = v 
 
 class ToDoc:
-    def __init__(self) -> None:
-        self.input_file = os.path.join(os.getcwd(), 'tests', 'docs','api_config.yaml')
-        self.output_file = os.path.join(os.getcwd(), 'tests', 'docs','output.yaml')
+    input_file: str
+    output_file: str
+    OADB: OpenApiDocBuilder
+    current_yaml: dict
+
+    def __init__(self, input_file: str, output_file: str) -> None:
+        self.input_file = input_file
+        self.output_file = output_file
         self.OADB = OpenApiDocBuilder(file_location=self.output_file, input_file_location=self.input_file)
         self.current_yaml = self.get_current_yaml(self.OADB)
 
