@@ -31,6 +31,13 @@ def mock_200_string_response(*args, **kwargs):
         'body': '"Some response"'
     }
 
+def mock_400_response(*args, **kwargs):
+    return {
+        "statusCode": 400,
+        'headers': {'Access-Control-Allow-Origin': '*'},
+        'body': json.dumps({"Error": "Client Error"})
+    }
+
 def mock_200_complex_response(*args, **kwargs):
     response_obj = ComplicatedObject()
     return {
@@ -52,6 +59,15 @@ class TestDocBuilder(unittest.TestCase):
             },
             "body": json.dumps(None)
         }
+        cls.event_400 = {
+            "httpMethod": "GET",
+            "resource": '/root/endpoint/{pparam}',
+            "queryParameters": {},
+            "pathParameters": {
+                "pparam": "wrong_param"
+            },
+            "body": json.dumps(None)
+        }        
         cls.event_200_complex = {
             "httpMethod": "GET",
             "resource": '/root/endpoint/complicated',
@@ -78,3 +94,6 @@ class TestDocBuilder(unittest.TestCase):
         response = mock_200_complex_response(event=self.event_200_complex)
         self.docs.build_endpoint(event=self.event_200_complex, response=response)        
 
+    def test_build_endpoint_400(self):
+        response = mock_400_response(event=self.event_400)
+        self.docs.build_endpoint(event=self.event_400, response=response)

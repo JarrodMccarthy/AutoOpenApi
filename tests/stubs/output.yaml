@@ -24,6 +24,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/rootendpointpparamget'
+        '400':
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorresponse'
   /root/endpoint/complicated:
     get:
       responses:
@@ -71,3 +77,9 @@ components:
                 another:
                   type: string
                   example: string
+    errorresponse:
+      type: object
+      properties:
+        Error:
+          type: string
+          example: Client Error

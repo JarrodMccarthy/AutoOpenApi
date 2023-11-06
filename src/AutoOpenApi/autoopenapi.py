@@ -507,10 +507,13 @@ class ToDoc:
     def build_endpoint(self, event: dict, response: dict):
         E1 = Endpoint(endpoint_name=event["resource"])
         M1 = Method(verb=event["httpMethod"])
-        schema_name = E1.name + M1.verb
+            
         code, msg = self._get_code(response)
+        if code == 200:
+            schema_name = E1.name + M1.verb
+        else:
+            schema_name = 'errorresponse'
         R1 = Response(code=code, desc=msg, schema_name=schema_name)
-
         S1 = Schema(response=R1, example=json.loads(response['body']))
 
         if not E1.exists(self.current_yaml): self.add_endpoint(E1)
