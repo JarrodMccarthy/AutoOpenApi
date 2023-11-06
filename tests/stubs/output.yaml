@@ -29,7 +29,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorresponse'
+                $ref: '#/components/schemas/clienterrorresponse'
+        '404':
+          description: Not Found Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notfounderrorresponse'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/servererrorresponse'
   /root/endpoint/complicated:
     get:
       responses:
@@ -77,9 +89,21 @@ components:
                 another:
                   type: string
                   example: string
-    errorresponse:
+    clienterrorresponse:
       type: object
       properties:
         Error:
           type: string
           example: Client Error
+    notfounderrorresponse:
+      type: object
+      properties:
+        Error:
+          type: string
+          example: Not Found Error
+    servererrorresponse:
+      type: object
+      properties:
+        Error:
+          type: string
+          example: Server Error

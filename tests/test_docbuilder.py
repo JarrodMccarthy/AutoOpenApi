@@ -38,6 +38,20 @@ def mock_400_response(*args, **kwargs):
         'body': json.dumps({"Error": "Client Error"})
     }
 
+def mock_404_response(*args, **kwargs):
+    return {
+        "statusCode": 404,
+        'headers': {'Access-Control-Allow-Origin': '*'},
+        'body': json.dumps({"Error": "Not Found Error"})
+    }
+
+def mock_500_response(*args, **kwargs):
+    return {
+        "statusCode": 500,
+        'headers': {'Access-Control-Allow-Origin': '*'},
+        'body': json.dumps({"Error": "Server Error"})
+    }
+
 def mock_200_complex_response(*args, **kwargs):
     response_obj = ComplicatedObject()
     return {
@@ -67,7 +81,25 @@ class TestDocBuilder(unittest.TestCase):
                 "pparam": "wrong_param"
             },
             "body": json.dumps(None)
-        }        
+        }     
+        cls.event_404 = {
+            "httpMethod": "GET",
+            "resource": '/root/endpoint/{pparam}',
+            "queryParameters": {},
+            "pathParameters": {
+                "pparam": "unknown"
+            },
+            "body": json.dumps(None)
+        }            
+        cls.event_500 = {
+            "httpMethod": "GET",
+            "resource": '/root/endpoint/{pparam}',
+            "queryParameters": {},
+            "pathParameters": {
+                "pparam": "wrong_p&ram"
+            },
+            "body": json.dumps(None)
+        }  
         cls.event_200_complex = {
             "httpMethod": "GET",
             "resource": '/root/endpoint/complicated',
@@ -97,3 +129,11 @@ class TestDocBuilder(unittest.TestCase):
     def test_build_endpoint_400(self):
         response = mock_400_response(event=self.event_400)
         self.docs.build_endpoint(event=self.event_400, response=response)
+
+    def test_build_endpoint_404(self):
+        response = mock_404_response(event=self.event_404)
+        self.docs.build_endpoint(event=self.event_404, response=response)  
+
+    def test_build_endpoint_500(self):
+        response = mock_500_response(event=self.event_500)
+        self.docs.build_endpoint(event=self.event_500, response=response)               

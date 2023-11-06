@@ -511,8 +511,12 @@ class ToDoc:
         code, msg = self._get_code(response)
         if code == 200:
             schema_name = E1.name + M1.verb
-        else:
-            schema_name = 'errorresponse'
+        elif code == 400:
+            schema_name = 'clientErrorResponse'
+        elif code == 404:
+            schema_name = 'notFoundErrorResponse'
+        else: 
+            schema_name = 'serverErrorResponse'
         R1 = Response(code=code, desc=msg, schema_name=schema_name)
         S1 = Schema(response=R1, example=json.loads(response['body']))
 
