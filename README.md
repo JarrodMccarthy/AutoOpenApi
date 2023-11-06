@@ -1,4 +1,4 @@
-<h1> AutoOpenApi <h1>
+<h1> AutoOpenApi </h1>
 
 <p>
 Is an attempt to automate the production of API documentation. 
